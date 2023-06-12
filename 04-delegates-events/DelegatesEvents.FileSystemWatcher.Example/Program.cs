@@ -15,11 +15,20 @@ fileSystemWatcher.Subscribe(filesChanged);
 
 Thread.Sleep(2353);
 Directory.CreateDirectory(path+"test1dir");
-var file = File.Open(path+"test1dir/file.txt", FileMode.Create);
-using var streamwriter = new
+string pathfile = path+"test1dir/file.txt";
+using (var stream = new StreamWriter(File.Open(pathfile, FileMode.OpenOrCreate))) {
+    stream.Write("Test write into text file");
+}
 
 Thread.Sleep(1234);
+using (var stream = new StreamWriter(File.Open(pathfile, FileMode.OpenOrCreate))) {
+    stream.Write("Test write write into text file");
+}
 
+Thread.Sleep(4324);
+File.Delete(path+"test1dir/file.txt");
+
+Console.ReadLine();
 //----------------------------------------------------------------------------------------
 static void ConvertAndShowMessage(List<DelegatesEvents.FileSystemWatcher.Notify> notifies){
     if (notifies!=null)
