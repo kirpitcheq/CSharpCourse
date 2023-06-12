@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DelegatesEvents.FileSystemWatcher", "DelegatesEvents.FileSystemWatcher\DelegatesEvents.FileSystemWatcher.csproj", "{D02F8FB4-BFC5-440F-8341-6757437D8DC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DelegatesEvents.FileSystemWatcher.Example", "DelegatesEvents.FileSystemWatcher.Example\DelegatesEvents.FileSystemWatcher.Example.csproj", "{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}"
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,5 +32,17 @@ Global
 		{D02F8FB4-BFC5-440F-8341-6757437D8DC8}.Release|x64.Build.0 = Release|Any CPU
 		{D02F8FB4-BFC5-440F-8341-6757437D8DC8}.Release|x86.ActiveCfg = Release|Any CPU
 		{D02F8FB4-BFC5-440F-8341-6757437D8DC8}.Release|x86.Build.0 = Release|Any CPU
+		{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}.Debug|x64.Build.0 = Debug|Any CPU
+		{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}.Debug|x86.Build.0 = Debug|Any CPU
+		{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}.Release|x64.ActiveCfg = Release|Any CPU
+		{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}.Release|x64.Build.0 = Release|Any CPU
+		{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}.Release|x86.ActiveCfg = Release|Any CPU
+		{DB802BB3-B456-4803-AF59-3BBF62F3A0C1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
