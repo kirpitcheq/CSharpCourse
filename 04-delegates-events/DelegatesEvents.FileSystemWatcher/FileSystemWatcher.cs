@@ -27,6 +27,7 @@ namespace DelegatesEvents
 
         public event FilesChanged? Change;
 
+        Dictionary<string, FileInfo> filesdict = new Dictionary<string, FileInfo>();
 
         //constr
         public FileSystemWatcher(double CheckedInterval) { //here need path, init dictionary to files
@@ -35,34 +36,38 @@ namespace DelegatesEvents
             timer.Interval = CheckedInterval;
             timer.Stop();
             timer.Elapsed += TimerWent!;
-        }
-        Dictionary<string, FileInfo> filesdict = new Dictionary<string, FileInfo>();
-        private void TimerWent(object sender, EventArgs args) {
-            List<Notify> notifies = new List<Notify>();
+            //init filesdict Dictionary
             var files_now = System.IO.Directory.GetFileSystemEntries(path, "", SearchOption.AllDirectories);
+            foreach (var file in files_now) 
+                filesdict.Add(file, new FileInfo(file));
+        }
+        private void TimerWent(object sender, EventArgs args) {
+            timer.Stop();
+            List<Notify> notifies = new List<Notify>();
+            var files_n_dirs_now = System.IO.Directory.GetFileSystemEntries(path, "", SearchOption.AllDirectories);
             //add, del, change
             foreach (var file in filesdict) {
-                if (files_now.Contains(file.Key) == false)
-                {
+                if (files_n_dirs_now.Contains(file.Key) == false) {
                     notifies.Add(new Notify (ChangesTypeDef.DELETED , file.Key));
                     filesdict.Remove(file.Key);
                 }
-
             }
-            foreach (var file in files_now) {
-                var fileinfo = new FileInfo(file);
-                // FileInfo fileinfonow = null;
-                if (filesdict.TryGetValue(fileinfo.Name, out FileInfo fileinfonow)) {
+            foreach (var file_or_dir in files_n_dirs_now) {
+                var fileinfo = new FileInfo(file_or_dir);
+                if(fileinfo.Exists == false) 
+                    continue; //that is dir! this is need for protect from ex from FileInfo: FileNotFoundException
+                FileInfo fileinfonow ;
+                if (filesdict.TryGetValue(file_or_dir, out fileinfonow)) {
                     //file added changed condition
-                    if (fileinfonow?.Length != fileinfo.Length) {
+                    if (fileinfonow?.Length != fileinfo?.Length) {
                         fileinfonow = fileinfo;
-                        notifies.Add(new Notify (ChangesTypeDef.CHANGED, file));
+                        notifies.Add(new Notify (ChangesTypeDef.CHANGED, file_or_dir));
                     }
                 }
                 else  //file added condition
                 {
-                    filesdict.Add(file, fileinfo);
-                    notifies.Add(new Notify(ChangesTypeDef.ADDED, file));
+                    filesdict.Add(file_or_dir, fileinfo);
+                    notifies.Add(new Notify(ChangesTypeDef.ADDED, file_or_dir));
                 }
                 // var changes = filesdict
                 //     .Where(x => x.Key == file || 
@@ -74,7 +79,7 @@ namespace DelegatesEvents
             if (notifies.Count > 0) {
                 Change?.Invoke(notifies);
             }
-
+            timer.Start();
         }
 
         private const double default_interval = 1000.0;
