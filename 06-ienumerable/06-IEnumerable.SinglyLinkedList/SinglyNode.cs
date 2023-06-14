@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 
 namespace _06_IEnumerable
 {
-    public class SinglyNode<T> : IEnumerator<T> where T : class
+    public class SinglyNode<T> : IEnumerator<T> 
     {
         SinglyNode<T> Next = null!;
-        private T? Value; // can be null! if Next and Value == null => SinglyNode is empty
-        
+        public T? Value { get; private set; } = default(T); // can be null! if Next and Value == null => SinglyNode is empty
+        public SinglyNode(T value) {
+            Value = value;
+        }
+        public override string ToString(){
+            return Value.ToString();
+        }
         //IEnumerator inmplementation
-        
         object System.Collections.IEnumerator.Current{
             get{
                 if(head == null) return (object)Value;
@@ -27,24 +31,36 @@ namespace _06_IEnumerable
         }
         SinglyNode<T> head = null!;
         public bool MoveNext() {
-            if(Next == null) return false;
-            head = Next;
+            if(head == null){
+                head = this;
+                return true;
+            }
+            head = head.Next;
+            if(head == null) 
+                return false;
             return true;
         }
         public void Reset() => throw new NotImplementedException();
-        public void Dispose() => throw new NotImplementedException();
+        public void Dispose() => head = null!;
         //end IEnumerator implementation
 
-        public void PushFront(T value) {
-            SinglyNode<T> temp = new SinglyNode<T>{Value = value, Next = this};
+        public SinglyNode<T> PushFront(T value) {
+            SinglyNode<T> temp = new SinglyNode<T>(value){Next = this};
+            return temp;
         }
-        public void PushBack(T value){
+        public SinglyNode<T> PushBack(T value){
             SinglyNode<T> temp = Next;
-            while(temp.Next != null) temp = temp.Next;
-            temp.Next = new SinglyNode<T> { Value = value };
+            if(temp == null){
+                Next = new SinglyNode<T>(value);
+                return Next;
+            }
+            while(temp?.Next != null) temp = temp.Next;
+            temp.Next = new SinglyNode<T>(value);
+            return temp.Next;
         }
         // public bool PopFront(){
         //     if(Value == null) return false;
+        //     if(Next = null)
         //     return true;
         // }
     }
