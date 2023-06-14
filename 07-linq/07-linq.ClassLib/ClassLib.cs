@@ -27,32 +27,32 @@ public static class ClassLib
             if(Convert.ToInt64(i) < 0) yield return i;
         }
     }
-    // public static IEnumerable<T> SmoothByMovingAverage<T>(this IEnumerable<T> source, int width, PointNeighborhood neighborhood = PointNeighborhood.LEFT_CLOSER){
+    // public static IEnumerable<T> SmoothByMovingAverage<T>(this IEnumerable<T> source, int width){
     //     if(width == 0) 
     //         throw new ArgumentOutOfRangeException("Width must be more than 0");
-    //     if(width > source.Count())
-    //         throw new ArgumentException("Width more than len of source");
     //     if(width == 1){
     //         foreach(var i in source){
     //              yield return i; 
     //         }
-    //         yield break;
+    //                         //or just return source but ->
+    //         yield break;    //return and yield return not must be in same method
     //     } 
 
     //     for(int i = 0; i < source.Count(); i++){
-    //         int leftbound = i;
-    //         int toleft = 0;
-    //         if(width % 2 == 0){
-    //             toleft = neighborhood == PointNeighborhood.LEFT_CLOSER ? width / 2 : width / 2 - 1;
+    //         // for(int j = i, count = 0; count < width; j++){
+    //         // }
+    //         int toleft = i - width;
+    //         int leftbound = width - toleft; //for more than 0
+    //         int count = 0;
+    //         T result = 0;
+    //         while(leftbound != i){
+    //             result += source[leftbound].Value;
+    //             count++;
     //         }
-    //         else 
-    //             toleft = width / 2;
-
-            
-    //         for(int j = i, count = 0; count < width; j++){
-    //         }
-
+    //         result += source[leftbound].Value;
+    //         count++;
+    //         result /= count;
+    //         yield return result;
     //     }
     // }
 }
-public enum PointNeighborhood{LEFT_CLOSER, RIGHT_CLOSER};
