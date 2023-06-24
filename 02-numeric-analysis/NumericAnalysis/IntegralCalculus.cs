@@ -20,7 +20,7 @@ public class IntegralCalculus
     }
     public static double TrapMeth(Func<double, double> func, double x1, double x2, uint segmentsnumb) {
         if(segmentsnumb == 0)
-            throw new ArgumentOutOfRangeException("segmentsnumb must be more than 0");
+            throw new ArgumentOutOfRangeException(segmentsnumb.GetType().Name, null, "segmentsnumb must be more than 0");
         double sum = 0;
         double step = (x2-x1) / segmentsnumb;
         if(segmentsnumb != 1) {
