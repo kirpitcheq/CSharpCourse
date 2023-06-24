@@ -13,12 +13,12 @@ public class IntegralCalculus
             double nowval = TrapMeth(func, x1, x2, i);
             exp = Math.Abs(preval - nowval);
             preval = nowval;
-            System.Console.WriteLine(exp);
+            System.Console.WriteLine("Precision exp = {0}, intervals = {1}", exp, i);
         }while(exp > precision);
 
         return preval;
     }
-    public static double TrapMeth(Func<double, double> func, double x1, double x2, uint segmentsnumb) {
+    static double TrapMeth(Func<double, double> func, double x1, double x2, uint segmentsnumb) {
         if(segmentsnumb == 0)
             throw new ArgumentOutOfRangeException(segmentsnumb.GetType().Name, null, "segmentsnumb must be more than 0");
         double sum = 0;
