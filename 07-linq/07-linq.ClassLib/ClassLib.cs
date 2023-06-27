@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections;
 using System.ComponentModel;
+using System.Numerics;
 
 namespace _07_linq;
 
@@ -27,32 +28,20 @@ public static class ClassLib
             if(Convert.ToInt64(i) < 0) yield return i;
         }
     }
-    // public static IEnumerable<T> SmoothByMovingAverage<T>(this IEnumerable<T> source, int width){
-    //     if(width == 0) 
-    //         throw new ArgumentOutOfRangeException("Width must be more than 0");
-    //     if(width == 1){
-    //         foreach(var i in source){
-    //              yield return i; 
-    //         }
-    //                         //or just return source but ->
-    //         yield break;    //return and yield return not must be in same method
-    //     } 
-
-    //     for(int i = 0; i < source.Count(); i++){
-    //         // for(int j = i, count = 0; count < width; j++){
-    //         // }
-    //         int toleft = i - width;
-    //         int leftbound = width - toleft; //for more than 0
-    //         int count = 0;
-    //         T result = 0;
-    //         while(leftbound != i){
-    //             result += source[leftbound].Value;
-    //             count++;
-    //         }
-    //         result += source[leftbound].Value;
-    //         count++;
-    //         result /= count;
-    //         yield return result;
-    //     }
-    // }
+    public static IEnumerable<T> SmoothByMovingAverage<T>(this IEnumerable<T> source, int width) where T : struct, IEquatable<T>, IIncrementOperators<T>, IAdditionOperators<T,T,T>, IDivisionOperators<T,T,T> 
+    {
+        foreach (var i in source){
+            var widthcounter = width;
+            T temp = i;
+            T counter = default(T);
+            counter++;
+            foreach (var j in source){
+                if(i.Equals(j) || widthcounter <= 0) break;
+                temp += j;
+                counter++;
+            }
+            temp/=counter;
+            yield return temp;
+        }
+    }
 }
