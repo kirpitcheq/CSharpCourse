@@ -26,8 +26,8 @@ namespace Structs.Lib
         const decimal METRE_TO_INCH = 39.3700787401574803M;
 
         /* explicit op */
-        public static explicit operator decimal(Metre m) => m.Value;
-        public static implicit operator Inch(Metre meter) => new(meter.Value * (1M / INCH_TO_METRE));
+        public static implicit operator decimal(Metre m) => m.Value;
+        public static explicit operator Inch(Metre meter) => new(meter.Value * (1M / INCH_TO_METRE));
         // public static implicit operator Inch(Meter meter) 
         //     => new(meter.Value * METRE_TO_INCH);
         /* simple bin ops */
@@ -36,8 +36,8 @@ namespace Structs.Lib
         public static Metre operator*(Metre A, Metre B) => new(A.Value * B.Value);
         public static Metre operator/(Metre A, Metre B) => new(A.Value / B.Value);
         /* simple unar ops */
-        public static Metre operator+(Metre A) => new(Math.Abs(A.Value));
-        public static Metre operator-(Metre A) => new(-Math.Abs(A.Value));
+        public static Metre operator+(Metre A) => new(A.Value);
+        public static Metre operator-(Metre A) => new(-A.Value);
         /* simple comp ops */
         public static bool operator==(Metre A, Metre B) => A.Value == B.Value;
         public static bool operator!=(Metre A, Metre B) => A.Value != B.Value;
@@ -56,8 +56,7 @@ namespace Structs.Lib
         /* inch-meter bin ops */
         public static Metre operator +(Inch A, Metre B) => new (INCH_TO_METRE * A.Value + B.Value); 
         public static Metre operator-(Inch A, Metre B) => new (INCH_TO_METRE * A.Value - B.Value);
-        // public static Meter operator*(Inch A, Meter B) 
-        //     => new (INCH_TO_METRE * A.Value * B.Value);
+        // public static Metre operator*(Inch A, Metre B) => new (INCH_TO_METRE * A.Value * B.Value);
         public static Metre operator/(Inch A, Metre B) => new (INCH_TO_METRE * A.Value / B.Value);
 #if COMMON_OLD
 #endif
@@ -68,6 +67,18 @@ namespace Structs.Lib
         public static bool operator<(Metre A, Inch B) => A.Value < INCH_TO_METRE * B.Value;
         public static bool operator>=(Metre A, Inch B) => A.Value >= INCH_TO_METRE * B.Value;
         public static bool operator<=(Metre A, Inch B) => A.Value <= INCH_TO_METRE * B.Value;
+        
+        /* metre-decimal bin ops */
+        public static Metre operator+(Metre A, decimal B) => new(A.Value + B);
+        public static Metre operator-(Metre A, decimal B) => new(A.Value - B);
+        public static Metre operator*(Metre A, decimal B) => new(A.Value * B);
+        public static Metre operator/(Metre A, decimal B) => new(A.Value / B);
+
+        /* decimal-metre bin ops */
+        public static Metre operator+(decimal A, Metre B) => new (A + B.Value); 
+        public static Metre operator-(decimal A, Metre B) => new (A - B.Value);
+        public static Metre operator*(decimal A, Metre B) => new (A * B.Value);
+        public static Metre operator/(decimal A, Metre B) => new (A / B.Value);
 
     }
 }

@@ -17,7 +17,7 @@ namespace Structs.Tests
         public static Metre MetreSubInchForward(Metre metre, Inch inch) => metre - inch;
         public static Metre MetreSubInchReverse(Metre metre, Inch inch) => inch - metre;
         public static Metre MetreMulInchForward(Metre metre, Inch inch) => metre * inch;
-        public static Metre MetreMulInchReverse(Metre metre, Inch inch) => inch * metre;
+        public static Metre MetreMulInchReverse(Metre metre, Inch inch) => (Metre)(inch * metre);
         public static Metre MetreDivInchForward(Metre metre, Inch inch) => metre / inch; 
         public static Metre MetreDivInchReverse(Metre metre, Inch inch) => inch / metre;
         public static IEnumerable<object[]> MetreBinMetreInchEnumerable()
@@ -111,6 +111,83 @@ namespace Structs.Tests
             Assert.Equal(expected, result);
         }
         //-----------------------------------------------------------------------------------
+        public delegate Metre MetreFuncMetreDecimal(Metre metre, decimal dec);
+        public static Metre MetreAddDecimalForward(Metre metre, decimal dec) => metre + dec;
+        public static Metre MetreAddDecimalReverse(Metre metre, decimal dec) => dec + metre;
+        public static Metre MetreSubDecimalForward(Metre metre, decimal dec) => metre - dec;
+        public static Metre MetreSubDecimalReverse(Metre metre, decimal dec) => dec - metre;
+        public static Metre MetreMulDecimalForward(Metre metre, decimal dec) => metre * dec;
+        public static Metre MetreMulDecimalReverse(Metre metre, decimal dec) => dec * metre;
+        public static Metre MetreDivDecimalForward(Metre metre, decimal dec) => metre / dec;
+        public static Metre MetreDivDecimalReverse(Metre metre, decimal dec) => dec / metre;
+        public static IEnumerable<object[]> MetreBinMetreDecimalEnumerable()
+        {   
+            yield return new object[] { 1M, 1M, (object)MetreAddDecimalForward, new Metre(2M) };
+            yield return new object[] { 1M, 1M, (object)MetreAddDecimalReverse, new Metre(2M) };
+            yield return new object[] { 1M, 1M, (object)MetreSubDecimalForward, new Metre(0M) };
+            yield return new object[] { 1M, 1M, (object)MetreSubDecimalReverse, new Metre(0M) };
+            yield return new object[] { 1M, 1M, (object)MetreMulDecimalForward, new Metre(1M) };
+            yield return new object[] { 1M, 1M, (object)MetreMulDecimalReverse, new Metre(1M) };
+            yield return new object[] { 1M, 1M, (object)MetreDivDecimalForward, new Metre(1M) }; 
+            yield return new object[] { 1M, 1M, (object)MetreDivDecimalReverse, new Metre(1M) };
+        }
+        [Theory, MemberData(nameof(MetreBinMetreDecimalEnumerable))]
+        public void MetreBinMetreDecimalTests(decimal first, decimal second, Func<Metre, Decimal, Metre> testfunc, Metre expected)
+        {
+            var firstStruct = new Metre(first); 
+            Metre result = testfunc(firstStruct, second);
+            Assert.Equal(expected.Value, result.Value);
+        }
+        //-----------------------------------------------------------------------------------
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(3, 3)]
+        public void DecimalExplicitMetre(decimal toMetre, decimal expected)
+        {
+            var metre = new Metre(toMetre); 
+            decimal result = metre;
+            Assert.Equal(expected, result);
+        }
+        //-----------------------------------------------------------------------------------
+        public static IEnumerable<object[]> InchExplicitMetreEnumerable()
+        {   
+            yield return new object[] { 1M, 39.370078740157480314960629921M };
+            yield return new object[] { 3M, 118.11023622047244094488188976M };
+        }
+        [Theory, MemberData(nameof(InchExplicitMetreEnumerable))]
+        public void InchExplicitMetre(decimal toMetre, decimal toinchExpected)
+        {
+            var metre = new Metre(toMetre); 
+            var expected = new Inch(toinchExpected); 
+            Inch result = (Inch) metre;
+            Assert.Equal(expected, result);
+        }
+        //-----------------------------------------------------------------------------------
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(-1, -1)]
+        [InlineData(3, 3)]
+        [InlineData(-3, -3)]
+        public void MetreUnarPlus(decimal toMetre, decimal expected)
+        {
+            var metre = new Metre(toMetre); 
+            var metreExpected = new Metre(expected); 
+            Metre result = +metre;
+            Assert.Equal(metreExpected, result);
+        }
+        //-----------------------------------------------------------------------------------
+        [Theory]
+        [InlineData(1, -1)]
+        [InlineData(-1, 1)]
+        [InlineData(3, -3)]
+        [InlineData(-3, 3)]
+        public void MetreUnarMinus(decimal toMetre, decimal expected)
+        {
+            var metre = new Metre(toMetre); 
+            var metreExpected = new Metre(expected); 
+            Metre result = -metre;
+            Assert.Equal(metreExpected, result);
+        }
 
     }
 }

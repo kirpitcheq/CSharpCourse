@@ -12,14 +12,14 @@ namespace Structs.Tests
     {
         //-----------------------------------------------------------------------------------
         public delegate Inch InchFuncInchMetre(Inch inch, Metre metre);
-        public static Inch InchAddMetreForward(Inch inch, Metre metre) => inch + metre;
-        public static Inch InchAddMetreReverse(Inch inch, Metre metre) => metre + inch;
-        public static Inch InchSubMetreForward(Inch inch, Metre metre) => inch - metre;
-        public static Inch InchSubMetreReverse(Inch inch, Metre metre) => metre - inch;
-        public static Inch InchMulMetreForward(Inch inch, Metre metre) => inch * metre;
-        public static Inch InchMulMetreReverse(Inch inch, Metre metre) => metre * inch;
-        public static Inch InchDivMetreForward(Inch inch, Metre metre) => inch / metre;
-        public static Inch InchDivMetreReverse(Inch inch, Metre metre) => metre / inch;
+        public static Inch InchAddMetreForward(Inch inch, Metre metre) => (Inch)(inch + metre);
+        public static Inch InchAddMetreReverse(Inch inch, Metre metre) => (Inch)(metre + inch);
+        public static Inch InchSubMetreForward(Inch inch, Metre metre) => (Inch)(inch - metre);
+        public static Inch InchSubMetreReverse(Inch inch, Metre metre) => (Inch)(metre - inch);
+        public static Inch InchMulMetreForward(Inch inch, Metre metre) => (Inch)(inch * metre);
+        public static Inch InchMulMetreReverse(Inch inch, Metre metre) => (Inch)(metre * inch);
+        public static Inch InchDivMetreForward(Inch inch, Metre metre) => (Inch)(inch / metre);
+        public static Inch InchDivMetreReverse(Inch inch, Metre metre) => (Inch)(metre / inch);
         public static IEnumerable<object[]> InchBinInchMetreEnumerable()
         {   
             yield return new object[] { 1M, 1M, (object)InchAddMetreForward, new Inch(40.370078740157480314960629921M) };
@@ -111,5 +111,79 @@ namespace Structs.Tests
             Assert.Equal(expected, result);
         }
         //-----------------------------------------------------------------------------------
+        public delegate Inch InchFuncInchDecimal(Inch inch, decimal dec);
+        public static Inch InchAddDecimalForward(Inch inch, decimal dec) => inch + dec;
+        public static Inch InchAddDecimalReverse(Inch inch, decimal dec) => dec + inch;
+        public static Inch InchSubDecimalForward(Inch inch, decimal dec) => inch - dec;
+        public static Inch InchSubDecimalReverse(Inch inch, decimal dec) => dec - inch;
+        public static Inch InchMulDecimalForward(Inch inch, decimal dec) => inch * dec;
+        public static Inch InchMulDecimalReverse(Inch inch, decimal dec) => dec * inch;
+        public static Inch InchDivDecimalForward(Inch inch, decimal dec) => inch / dec;
+        public static Inch InchDivDecimalReverse(Inch inch, decimal dec) => dec / inch;
+        public static IEnumerable<object[]> InchBinInchDecimalEnumerable()
+        {   
+            yield return new object[] { 1M, 1M, (object)InchAddDecimalForward, new Inch(2M) };
+            yield return new object[] { 1M, 1M, (object)InchAddDecimalReverse, new Inch(2M) };
+            yield return new object[] { 1M, 1M, (object)InchSubDecimalForward, new Inch(0M) };
+            yield return new object[] { 1M, 1M, (object)InchSubDecimalReverse, new Inch(0M) };
+            yield return new object[] { 1M, 1M, (object)InchMulDecimalForward, new Inch(1M) };
+            yield return new object[] { 1M, 1M, (object)InchMulDecimalReverse, new Inch(1M) };
+            yield return new object[] { 1M, 1M, (object)InchDivDecimalForward, new Inch(1M) }; //how use many ops overloads?
+            yield return new object[] { 1M, 1M, (object)InchDivDecimalReverse, new Inch(1M) };
+        }
+        [Theory, MemberData(nameof(InchBinInchDecimalEnumerable))]
+        public void InchBinInchDecimalTests(decimal first, decimal second, Func<Inch, Decimal, Inch> testfunc, Inch expected)
+        {
+            var firstStruct = new Inch(first); 
+            Inch result = testfunc(firstStruct, second);
+            Assert.Equal(expected.Value, result.Value);
+        }
+        //-----------------------------------------------------------------------------------
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(3, 3)]
+        public void DecimalExplicitInch(decimal toinch, decimal expected)
+        {
+            var inch = new Inch(toinch); 
+            decimal result = inch;
+            Assert.Equal(expected, result);
+        }
+        //-----------------------------------------------------------------------------------
+        [Theory]
+        [InlineData(1, 0.0254)]
+        [InlineData(3, 0.0762)]
+        public void MeterExplicitInch(decimal toinch, decimal tometreExpected)
+        {
+            var inch = new Inch(toinch); 
+            var expected = new Metre(tometreExpected); 
+            Metre result = (Metre) inch;
+            Assert.Equal(expected, result);
+        }
+        //-----------------------------------------------------------------------------------
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(-1, -1)]
+        [InlineData(3, 3)]
+        [InlineData(-3, -3)]
+        public void InchUnarPlus(decimal toinch, decimal expected)
+        {
+            var inch = new Inch(toinch); 
+            var inchExpected = new Inch(expected); 
+            Inch result = +inch;
+            Assert.Equal(inchExpected, result);
+        }
+        //-----------------------------------------------------------------------------------
+        [Theory]
+        [InlineData(1, -1)]
+        [InlineData(-1, 1)]
+        [InlineData(3, -3)]
+        [InlineData(-3, 3)]
+        public void InchUnarMinus(decimal toinch, decimal expected)
+        {
+            var inch = new Inch(toinch); 
+            var inchExpected = new Inch(expected); 
+            Inch result = -inch;
+            Assert.Equal(inchExpected, result);
+        }
     }
 }
