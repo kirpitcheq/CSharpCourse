@@ -3,9 +3,9 @@ using System.Threading;
 using System.IO;
 using Microsoft.VisualBasic;
 
-namespace DelegatesEvents
+namespace _04_delegates_events
 {
-    public delegate void FilesChanged(List<DelegatesEvents.FileSystemWatcher.Notify> notifies);
+    public delegate void FilesChanged(List<FileSystemWatcher.Notify> notifies);
     public class FileSystemWatcher
     {
         private readonly System.Timers.Timer timer = new System.Timers.Timer();
@@ -20,12 +20,24 @@ namespace DelegatesEvents
                 TypeOfChange = typeOfChange;
                 RelativePath = relativePath;
             }
-            override public string ToString() { return "File "+ RelativePath + " is " + TypeOfChange + " at " + TimeOfChanges; }
+            override public string ToString() { return "File " + RelativePath + " is " + TypeOfChange + " at " + TimeOfChanges; }
         }
         private string[] files { get; set; }
         private string path { get; set; } = "."; //this folder by default
 
-        public event FilesChanged? Change;
+        FilesChanged? change; 
+        public event FilesChanged? Change{ 
+            add{
+                change += value;
+                if (!timer.Enabled) timer.Start();
+            }
+            remove{
+                if(change != null) {
+                    change -= value;
+                    if (change == null && timer.Enabled) timer.Stop();
+                }
+            }
+        }
 
         Dictionary<string, FileInfo> filesdict = new Dictionary<string, FileInfo>();
 
@@ -54,50 +66,27 @@ namespace DelegatesEvents
             }
             foreach (var file_or_dir in files_n_dirs_now) {
                 var fileinfo = new FileInfo(file_or_dir);
-                if(fileinfo.Exists == false) 
-                    continue; //that is dir! this is need for protect from ex from FileInfo: FileNotFoundException
-                FileInfo fileinfonow ;
-                if (filesdict.TryGetValue(file_or_dir, out fileinfonow)) {
-                    //file added changed condition
-                    if (fileinfonow?.Length != fileinfo?.Length) {
-                        fileinfonow = fileinfo;
+                if(fileinfo.Exists == false) //that is dir!
+                    continue;  //need for protect from ex from FileInfo: FileNotFoundException
+                if (filesdict.TryGetValue(file_or_dir, out FileInfo fileinfonow)) { //file changed condition
+                    if (fileinfonow?.Length != fileinfo?.Length) { 
+                        filesdict[file_or_dir] = fileinfo;
                         notifies.Add(new Notify (ChangesTypeDef.CHANGED, file_or_dir));
                     }
-                }
-                else  //file added condition
-                {
+                }   
+                else  { //file added condition
                     filesdict.Add(file_or_dir, fileinfo);
                     notifies.Add(new Notify(ChangesTypeDef.ADDED, file_or_dir));
-                }
-                // var changes = filesdict
-                //     .Where(x => x.Key == file || 
-                //         x.Value.Length == fileinfo.Length || 
-                //         x.Value.CreationTime == fileinfo.CreationTime)
-                //     .ToList();
+                }   
             }
             // here now have dictionary with old files and "files" with now state files
             if (notifies.Count > 0) {
-                Change?.Invoke(notifies);
+                change?.Invoke(notifies);
             }
             timer.Start();
         }
 
-        private const double default_interval = 1000.0;
+        private const double default_interval = 100.0;
         public FileSystemWatcher() : this(default_interval) { }
-
-        public bool Subscribe(FilesChanged func)
-        {
-            if (func == null) return false;
-            Change += func;
-            if (!timer.Enabled)
-                timer.Start();
-            return true;
-        }
-
-        public void Unsubscribe(FilesChanged func)
-        {
-
-        }
-
     }
 }

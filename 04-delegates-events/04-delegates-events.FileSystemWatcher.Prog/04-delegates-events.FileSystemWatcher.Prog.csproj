@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\DelegatesEvents.FileSystemWatcher\DelegatesEvents.FileSystemWatcher.csproj" />
+    <ProjectReference Include="..\04-delegates-events.FileSystemWatcher\04-delegates-events.FileSystemWatcher.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>_04_delegates_events.FileSystemWatcher.Prog</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
