@@ -156,7 +156,14 @@ find . -type f -iregex "./05-reflection\.Plugins.*/bin/Debug/net7.0/05-reflectio
 ```
 Ключевая инструкция - `"dependsOn":["cpyplugdlls"]`, которая указывает, что перед сборкой требуется сначала выполнить задачу, в которой указана команда выполнения скрипта
 
-Демонстрация работы основной программы
+В случае ввода неверной комманды выводится соответствующее сообщение
+```bash
+Put "exit" to exit or "help" for commands info of loaded plugins: 
+something
+Wrong command
+```
+
+## Демонстрация работы основной программы
 ``` bash
 X:~/assignments-csharp/05-reflection$  /.vscode/extensions/ms-dotnettools.csharp-2.0.238-linux-x64/.debugger/vsdbg --interpreter=vscode --connection=/tmp/CoreFxPipe_vsdbg-ui-5ee3bc74e2044f6d9008ebe3ce668a89 
 Put "exit" to exit or "help" for commands info of loaded plugins: 
@@ -199,6 +206,10 @@ consonats
 Type your string arg: 
 Hello World 1234567890
 Your result: Hll Wrld 
+
+Put "exit" to exit or "help" for commands info of loaded plugins: 
+something
+Wrong command
 
 Put "exit" to exit or "help" for commands info of loaded plugins: 
 exit

@@ -30,6 +30,7 @@ do{
             }
             catch (System.Exception)
             {
+                WriteLine("Wrong command\n");
                 continue;
             }
             WriteLine("Type your string arg: ");
